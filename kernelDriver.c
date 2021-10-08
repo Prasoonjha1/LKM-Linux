@@ -41,12 +41,6 @@ static struct file_operations fops =
    .release = dev_release,
 };
 
-/** @brief The LKM initialization function
- *  The static keyword restricts the visibility of the function to within this C file. The __init
- *  macro means that for a built-in driver (not a LKM) the function is only used at initialization
- *  time and that it can be discarded and its memory freed up after that point.
- *  @return returns 0 if successful
- */
 static int __init ebbchar_init(void)
 {
    printk(KERN_INFO "KDriver: Initializing the KDriver LKM\n");
@@ -102,11 +96,6 @@ static void __exit ebbchar_exit(void)
    printk(KERN_INFO "KDriver: Goodbye from the LKM!\n");
 }
 
-/** @brief The device open function that is called each time the device is opened
- *  This will only increment the numberOpens counter in this case.
- *  @param inodep A pointer to an inode object (defined in linux/fs.h)
- *  @param filep A pointer to a file object (defined in linux/fs.h)
- */
 static int dev_open(struct inode *inodep, struct file *filep)
 {
    mutex_lock(&mutex_1);	//Lock the mutex and enter the critical region
@@ -151,11 +140,6 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
    return len;
 }
 
-/** @brief The device release function that is called whenever the device is closed/released by
- *  the userspace program
- *  @param inodep A pointer to an inode object (defined in linux/fs.h)
- *  @param filep A pointer to a file object (defined in linux/fs.h)
- */
 static int dev_release(struct inode *inodep, struct file *filep)
 {
    mutex_unlock(&mutex_1);	//unlock the mutex and allow anothe process to enter the critical region
