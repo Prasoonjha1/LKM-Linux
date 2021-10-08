@@ -77,10 +77,6 @@ static int __init ebbchar_init(void)
    return 0;
 }
 
-/** @brief The LKM cleanup function
- *  Similar to the initialization function, it is static. The __exit macro notifies that if this
- *  code is used for a built-in driver (not a LKM) that this function is not required.
- */
 static void __exit ebbchar_exit(void)
 {
    mutex_destroy(&mutex_1);	//Destroy the allocated mutex
@@ -101,29 +97,20 @@ static int dev_open(struct inode *inodep, struct file *filep)
    return 0;
 }
 
-/** @brief This function is called whenever device is being read from user space i.e. data is
- *  being sent from the device to the user. In this case is uses the copy_to_user() function to
- *  send the buffer string to the user and captures any errors.
- *  @param filep A pointer to a file object (defined in linux/fs.h)
- *  @param buffer The pointer to the buffer to which this function writes the data
- *  @param len The length of the b
- *  @param offset The offset if required
- */
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
    int error_count = 0;
-   // copy_to_user has the format ( * to, *from, size) and returns 0 on success
    error_count = copy_to_user(buffer, message, size_of_message);
 
    if (error_count==0)		// if true then have success
    {
       printk(KERN_INFO "KDriver: Sent %d characters to the user\n", size_of_message);
-      return (size_of_message=0);  // clear the position to the start and return 0
+      return (size_of_message=0);  
    }
    else 
    {
       printk(KERN_INFO "KDriver: Failed to send %d characters to the user\n", error_count);
-      return -EFAULT;              // Failed -- return a bad address message (i.e. -14)
+      return -EFAULT;              // Failed 
    }
 }
 
