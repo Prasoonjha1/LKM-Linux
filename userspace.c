@@ -1,7 +1,3 @@
-/*
-* Original Code taken from Dereck Molloy (text: Exploring Beagle Board Black)
-* Modified for this Project only
-*/
 #include<stdio.h>
 #include<stdlib.h>
 #include<errno.h>
